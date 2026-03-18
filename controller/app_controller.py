@@ -115,11 +115,11 @@ class AppController:
         with col_btn:
             calc_clicked = st.button(
                 "⚡  Calculer l'énergie primaire",
-                use_container_width=True,
+                width='stretch',
                 type="primary",
             )
         with col_reset:
-            if st.button("🔄 Reset", use_container_width=True):
+            if st.button("🔄 Reset", width='stretch'):
                 st.session_state.preset_values = {}
                 st.session_state.resultat_calcul = None
                 st.rerun()

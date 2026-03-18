@@ -244,7 +244,7 @@ def render_presets() -> str | None:
             if st.button(
                 f"{m.icone} {m.nom.split()[0]}",
                 key=f"preset_{m.id}",
-                use_container_width=True,
+                width='stretch',
             ):
                 return m.id
     return None
@@ -546,7 +546,7 @@ def render_comparatif():
     df = pd.DataFrame(tableau_data)
     st.dataframe(
         df,
-        use_container_width=True,
+        width='stretch',
         hide_index=True,
         column_config={
             "Résultat (W/pers.)": st.column_config.ProgressColumn(
