@@ -24,7 +24,7 @@ from model.calculateur import (
 
 def render_hero():
     """En-tête principal de l'application."""
-    st.markdown("""
+    st.html("""
     <div class="hero-header">
         <div class="hero-badge">🌿 Société à 2000 watts · HaLege Suisse</div>
         <h1>Efficacité Énergétique<br>des Micromaisons</h1>
@@ -33,7 +33,7 @@ def render_hero():
             et calculez votre propre bilan selon le concept de la société à 2000 watts.
         </p>
     </div>
-    """, unsafe_allow_html=True)
+    """)
 
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -69,7 +69,7 @@ def render_fiche_habitat(m: Micromaison):
     """Affiche la fiche complète d'un habitat."""
 
     # ── Titre + Description
-    st.markdown(f"""
+    st.html(f"""
     <div class="card">
         <div class="card-header">
             <div class="card-icon">{m.icone}</div>
@@ -82,7 +82,7 @@ def render_fiche_habitat(m: Micromaison):
             {m.description}
         </p>
     </div>
-    """, unsafe_allow_html=True)
+    """)
 
     # ── Résultat Watt + Données clé
     col_watt, col_info = st.columns([1, 1.5])
@@ -105,7 +105,7 @@ def render_fiche_habitat(m: Micromaison):
 
 def _render_watt_card(watts: float, comparaison: str):
     couleur = _couleur_watts(watts)
-    st.markdown(f"""
+    st.html(f"""
     <div class="card" style="text-align:center;">
         <div class="watt-display">
             <p class="watt-number" style="color: {couleur};">{int(watts)}</p>
@@ -114,7 +114,7 @@ def _render_watt_card(watts: float, comparaison: str):
         </div>
         {_render_gauge_html(watts)}
     </div>
-    """, unsafe_allow_html=True)
+    """)
 
 
 def _render_donnees_cle(m: Micromaison):
@@ -134,14 +134,14 @@ def _render_donnees_cle(m: Micromaison):
             <span class="data-value" style="max-width:60%; text-align:right;">{value}</span>
         </div>"""
 
-    st.markdown(f"""
+    st.html(f"""
     <div class="card">
         <h4 style="font-family: 'DM Serif Display', serif; margin: 0 0 1rem 0; font-size: 1.1rem;">
             Données clé
         </h4>
         {rows_html}
     </div>
-    """, unsafe_allow_html=True)
+    """)
 
 
 def _render_materiaux(m: Micromaison):
@@ -158,14 +158,14 @@ def _render_materiaux(m: Micromaison):
             </p>
         </div>"""
 
-    st.markdown(f"""
+    st.html(f"""
     <div class="card">
         <h4 style="font-family: 'DM Serif Display', serif; margin: 0 0 0.8rem 0; font-size: 1.1rem;">
             🧱 Matériaux principaux
         </h4>
         {mat_rows}
     </div>
-    """, unsafe_allow_html=True)
+    """)
 
 
 def _render_approvisionnement(m: Micromaison):
@@ -180,7 +180,7 @@ def _render_approvisionnement(m: Micromaison):
     else:
         sol_color, sol_bg = "#FF5722", "rgba(255,87,34,0.1)"
 
-    st.markdown(f"""
+    st.html(f"""
     <div class="card">
         <h4 style="font-family: 'DM Serif Display', serif; margin: 0 0 0.8rem 0; font-size: 1.1rem;">
             ⚡ Approvisionnement en énergie
@@ -215,7 +215,7 @@ def _render_approvisionnement(m: Micromaison):
             </span>
         </div>
     </div>
-    """, unsafe_allow_html=True)
+    """)
 
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -224,11 +224,11 @@ def _render_approvisionnement(m: Micromaison):
 
 def render_presets() -> str | None:
     """Boutons de chargement des presets. Retourne l'id si cliqué."""
-    st.markdown("""
+    st.html("""
     <p style="font-size:0.88rem; color:var(--text-muted); margin-bottom:0.5rem;">
         ⚡ Charger les valeurs d'un habitat existant :
     </p>
-    """, unsafe_allow_html=True)
+    """)
 
     cols = st.columns(len(MICROMAISONS))
     for i, m in enumerate(MICROMAISONS):
@@ -245,7 +245,7 @@ def render_presets() -> str | None:
 def render_calculateur_form() -> dict:
     """Formulaire du calculateur 2000W. Retourne les valeurs saisies."""
 
-    st.markdown("""
+    st.html("""
     <div class="card" style="border-left: 4px solid var(--primary);">
         <h4 style="font-family: 'DM Serif Display', serif; margin: 0 0 0.3rem 0;">
             Calculateur Énergie Primaire
@@ -256,7 +256,7 @@ def render_calculateur_form() -> dict:
             <a href="http://2000-watt-wohnen.ch/energierechner/" target="_blank">2000-watt-wohnen.ch</a>.
         </p>
     </div>
-    """, unsafe_allow_html=True)
+    """)
 
     # Preset values from session_state
     p = st.session_state.get("preset_values", {})
@@ -352,7 +352,7 @@ def render_resultat_calcul(resultat: ResultatCalcul):
     col_res, col_echelle = st.columns([1, 1])
 
     with col_res:
-        st.markdown(f"""
+        st.html(f"""
         <div class="card" style="border-top: 4px solid {resultat.couleur};">
             <div class="watt-display">
                 <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 0.5rem;">
@@ -371,7 +371,7 @@ def render_resultat_calcul(resultat: ResultatCalcul):
                 Énergie primaire totale : {resultat.energie_primaire_kwh:,.0f} kWh/an
             </p>
         </div>
-        """, unsafe_allow_html=True)
+        """)
 
     with col_echelle:
         _render_echelle(resultat)
@@ -402,7 +402,7 @@ def _render_echelle(resultat: ResultatCalcul):
         </div>"""
         prev_seuil = seuil
 
-    st.markdown(f"""
+    st.html(f"""
     <div class="card">
         <h4 style="font-family: 'DM Serif Display', serif; margin: 0 0 1rem 0; font-size: 1rem;">
             Échelle de référence
@@ -413,7 +413,7 @@ def _render_echelle(resultat: ResultatCalcul):
             L'objectif résidentiel est de <strong>420 W/personne</strong>, soit ~1/3 du budget total.
         </p>
     </div>
-    """, unsafe_allow_html=True)
+    """)
 
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -423,7 +423,7 @@ def _render_echelle(resultat: ResultatCalcul):
 def render_comparatif():
     """Affiche le comparatif complet de tous les habitats."""
 
-    st.markdown("""
+    st.html("""
     <div class="card" style="border-left: 4px solid var(--primary);">
         <h4 style="font-family: 'DM Serif Display', serif; margin: 0 0 0.3rem 0;">
             Comparatif des habitats
@@ -432,7 +432,7 @@ def render_comparatif():
             Vue d'ensemble de l'efficacité énergétique selon la société à 2000 watts.
         </p>
     </div>
-    """, unsafe_allow_html=True)
+    """)
 
     # Barres de comparaison
     max_watts = max(m.consommation_watts for m in MICROMAISONS)
@@ -444,7 +444,7 @@ def render_comparatif():
         objectif_pct = OBJECTIF_LOGEMENT / bar_max * 100
         check = "✅" if m.consommation_watts <= OBJECTIF_LOGEMENT else ""
 
-        st.markdown(f"""
+        st.html(f"""
         <div class="card" style="padding: 1rem 1.2rem;">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
                 <div style="display:flex; align-items:center; gap:0.6rem;">
@@ -475,10 +475,10 @@ def render_comparatif():
                 <span>Solaire : {int(m.approvisionnement.couverture_solaire_pct) if m.approvisionnement else 0}%</span>
             </div>
         </div>
-        """, unsafe_allow_html=True)
+        """)
 
     # Graphique natif Streamlit
-    st.markdown('<div class="section-title">Consommation par habitat</div>', unsafe_allow_html=True)
+    st.html('<div class="section-title">Consommation par habitat</div>')
 
     df_chart = pd.DataFrame({
         "Habitat": [m.nom for m in MICROMAISONS],
@@ -488,7 +488,7 @@ def render_comparatif():
     st.bar_chart(df_chart, color="#8BA834", horizontal=True)
 
     # Tableau récapitulatif
-    st.markdown('<div class="section-title">Résumé approvisionnement</div>', unsafe_allow_html=True)
+    st.html('<div class="section-title">Résumé approvisionnement</div>')
 
     tableau_data = []
     for m in MICROMAISONS:
@@ -521,7 +521,7 @@ def render_comparatif():
     )
 
     # Explication
-    st.markdown("""
+    st.html("""
     <div class="card" style="background: rgba(139, 168, 52, 0.04); border-color: rgba(139, 168, 52, 0.2);">
         <h4 style="font-family: 'DM Serif Display', serif; margin: 0 0 0.5rem 0; font-size: 1rem; color: var(--primary-dark);">
             Qu'est-ce que la société à 2000 watts ?
@@ -534,7 +534,7 @@ def render_comparatif():
             La valeur cible pour le logement est de <strong>420 watts par personne</strong>.
         </p>
     </div>
-    """, unsafe_allow_html=True)
+    """)
 
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -543,7 +543,7 @@ def render_comparatif():
 
 def render_footer():
     """Pied de page."""
-    st.markdown("""
+    st.html("""
     <div class="footer">
         <p>
             Données : <a href="https://www.habitat-leger.ch" target="_blank">habitat-leger.ch</a>
@@ -554,7 +554,7 @@ def render_footer():
             · "Fact Sheets Kleinwohnformen", Juillet 2020 · Traduction 2022 HaLege
         </p>
     </div>
-    """, unsafe_allow_html=True)
+    """)
 
 
 # ═══════════════════════════════════════════════════════════════════════════
