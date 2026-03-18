@@ -60,6 +60,7 @@ class TypeChauffage(Enum):
 class ResultatCalcul:
     """Résultat du calcul 2000 watts."""
     watts_par_personne: float
+    watts_foyer: float           # total watts pour l'ensemble du ménage
     energie_primaire_kwh: float
     label: str
     label_court: str
@@ -158,14 +159,16 @@ def calculer_2000_watts(
     # Total énergie primaire annuelle
     ep_total = ep_chauffage + ep_eau_chaude + ep_electricite
 
-    # Conversion en watts par personne
+    # Conversion en watts
     # W = kWh/an ÷ 8760 h/an × 1000
-    watts = (ep_total / HEURES_PAR_AN * 1000) / max(nb_occupants, 1)
+    watts_foyer = ep_total / HEURES_PAR_AN * 1000
+    watts = watts_foyer / max(nb_occupants, 1)
 
     label, label_court, couleur = _label_energie(watts)
 
     return ResultatCalcul(
         watts_par_personne=round(watts),
+        watts_foyer=round(watts_foyer),
         energie_primaire_kwh=round(ep_total, 1),
         label=label,
         label_court=label_court,

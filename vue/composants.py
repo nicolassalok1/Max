@@ -55,14 +55,22 @@ def render_tabs():
 
 def render_selecteur_habitat() -> str:
     """Sélecteur de type d'habitat. Retourne l'id sélectionné."""
-    options = {m.id: f"{m.icone}  {m.nom}" for m in MICROMAISONS}
-    choix = st.selectbox(
+    ids = [m.id for m in MICROMAISONS]
+    labels = [f"{m.icone}  {m.nom}" for m in MICROMAISONS]
+
+    current_id = st.session_state.get("habitat_selectionne", ids[0])
+    default_label = labels[ids.index(current_id)] if current_id in ids else labels[0]
+
+    choix_label = st.pills(
         "Choisir un habitat",
-        options=list(options.keys()),
-        format_func=lambda x: options[x],
+        options=labels,
+        default=default_label,
         label_visibility="collapsed",
+        key="selecteur_habitat",
     )
-    return choix
+    if choix_label is None:
+        choix_label = default_label
+    return ids[labels.index(choix_label)]
 
 
 def render_fiche_habitat(m: Micromaison):
@@ -251,9 +259,8 @@ def render_calculateur_form() -> dict:
             Calculateur Énergie Primaire
         </h4>
         <p style="color: var(--text-muted); font-size: 0.88rem; margin: 0;">
-            Estimez votre consommation selon le modèle de la société à 2000 watts.
-            Basé sur
-            <a href="http://2000-watt-wohnen.ch/energierechner/" target="_blank">2000-watt-wohnen.ch</a>.
+            Saisissez vos consommations annuelles pour obtenir votre note d'efficacité
+            énergétique résidentielle et la consommation de votre ménage par personne.
         </p>
     </div>
     """)
@@ -282,7 +289,7 @@ def render_calculateur_form() -> dict:
     with col1:
         st.markdown("##### 👥 Logement")
         nb_occupants = st.number_input(
-            "Nombre d'occupants",
+            "👤 Habitants du ménage",
             min_value=1, max_value=10,
             value=p.get("nb_occupants", 1),
             step=1,
@@ -354,20 +361,51 @@ def render_resultat_calcul(resultat: ResultatCalcul):
     with col_res:
         st.html(f"""
         <div class="card" style="border-top: 4px solid {resultat.couleur};">
-            <div class="watt-display">
-                <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 0.5rem;">
-                    Votre énergie primaire résidentielle
-                </p>
-                <p class="watt-number" style="color: {resultat.couleur};">
-                    {resultat.watts_par_personne}
-                </p>
-                <p class="watt-unit">Watts par personne</p>
-                <span class="watt-label">
+            <p style="font-size: 0.78rem; font-weight: 600; letter-spacing: 0.08em;
+                      color: var(--text-light); text-transform: uppercase; margin: 0 0 0.8rem 0;">
+                Note de l'habitation
+            </p>
+            <div style="display: flex; align-items: center; justify-content: center;
+                        gap: 0.8rem; margin-bottom: 0.8rem;">
+                <span style="font-family: 'DM Serif Display', serif; font-size: 2.8rem;
+                             font-weight: 400; color: {resultat.couleur}; line-height: 1;">
+                    {resultat.label_court}
+                </span>
+                <span style="font-size: 0.88rem; color: var(--text-muted); max-width: 180px;
+                             line-height: 1.4;">
                     {resultat.label}
                 </span>
             </div>
+            <div style="display: flex; gap: 1rem; margin-bottom: 0.5rem;">
+                <div style="flex: 1; background: {resultat.couleur}18; border-radius: 10px;
+                            padding: 0.9rem; text-align: center;">
+                    <p style="font-size: 0.75rem; color: var(--text-muted); margin: 0 0 0.3rem 0;">
+                        Par personne
+                    </p>
+                    <p style="font-family: 'DM Serif Display', serif; font-size: 2rem;
+                              color: {resultat.couleur}; margin: 0; line-height: 1;">
+                        {resultat.watts_par_personne}
+                    </p>
+                    <p style="font-size: 0.75rem; color: var(--text-muted); margin: 0.2rem 0 0 0;">
+                        W / personne
+                    </p>
+                </div>
+                <div style="flex: 1; background: rgba(139,168,52,0.06); border-radius: 10px;
+                            padding: 0.9rem; text-align: center;">
+                    <p style="font-size: 0.75rem; color: var(--text-muted); margin: 0 0 0.3rem 0;">
+                        Total ménage
+                    </p>
+                    <p style="font-family: 'DM Serif Display', serif; font-size: 2rem;
+                              color: var(--text-main); margin: 0; line-height: 1;">
+                        {resultat.watts_foyer}
+                    </p>
+                    <p style="font-size: 0.75rem; color: var(--text-muted); margin: 0.2rem 0 0 0;">
+                        W total
+                    </p>
+                </div>
+            </div>
             {_render_gauge_html(resultat.watts_par_personne)}
-            <p style="text-align:center; font-size:0.82rem; color:var(--text-light); margin-top:1rem;">
+            <p style="text-align:center; font-size:0.82rem; color:var(--text-light); margin-top:0.5rem;">
                 Énergie primaire totale : {resultat.energie_primaire_kwh:,.0f} kWh/an
             </p>
         </div>
