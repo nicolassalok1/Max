@@ -588,8 +588,7 @@ def render_footer():
             · Association HaLege Suisse · Verein Kleinwohnformen Schweiz
         </p>
         <p>
-            Calcul : <a href="http://2000-watt-wohnen.ch/energierechner/" target="_blank">2000-watt-wohnen.ch</a>
-            · "Fact Sheets Kleinwohnformen", Juillet 2020 · Traduction 2022 HaLege
+            "Fact Sheets Kleinwohnformen", Juillet 2020 · Traduction 2022 HaLege
         </p>
     </div>
     """)
